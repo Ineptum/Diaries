@@ -6,13 +6,15 @@ class DB:
     def __init__(self):
         conn = sqlite3.connect("news.db", check_same_thread=False)
         self.conn = conn
-        
+
     def get_connection(self):
         return self.conn
-    
+
     def __del__(self):
         self.conn.close()
-        
+
+db = DB()
+
 
 class UsersModel:
     def __init__(self, connection):
@@ -34,7 +36,7 @@ class UsersModel:
         cursor.execute('''INSERT INTO users (user_name, password_hash, admin)
                           VALUES (?,?,?)''', ('admin', 'admin', 1))
         cursor.execute('''INSERT INTO users (user_name, password_hash, admin)
-                          VALUES (?,?,?)''', ('user', 'user', 0))
+                          VALUES (?,?,?)''', ('angel', 'angel', 0))
         cursor.close()
         self.connection.commit()
 
@@ -70,8 +72,8 @@ class UsersModel:
                        (user_name, password_hash))
         row = cursor.fetchone()
         return (True, row[0]) if row else (False,)
-    
-    
+
+
 class NewsModel:
     def __init__(self, connection):
         self.connection = connection
@@ -88,22 +90,22 @@ class NewsModel:
                              title VARCHAR(100),
                              content VARCHAR(1000),
                              user_id INTEGER,
-                             pub_date INTEGER
+                             pub_date INTEGER,
+                             pic VARCHAR(100)
                              )''')
         cursor.close()
         self.connection.commit()
 
-    def insert(self, title, content, user_id, edit=None):
-        if not edit:
-            pub_date = round(datetime.timestamp(datetime.now()))
-        else:
+    def insert(self, title, content, user_id, pic, edit=None):
+        pub_date = round(datetime.timestamp(datetime.now()))
+        if edit:
             news = NewsModel(db.get_connection())
-            pub_date = news.get(edit)[4]
-            print(pub_date)
+            if news.get(edit):
+                pub_date = news.get(edit)[4]
         cursor = self.connection.cursor()
         cursor.execute('''INSERT INTO news
-                          (title, content, user_id, pub_date)
-                          VALUES (?,?,?,?)''', (title, content, str(user_id), pub_date))
+                          (title, content, user_id, pub_date, pic)
+                          VALUES (?,?,?,?,?)''', (title, content, str(user_id), pub_date, pic))
         cursor.close()
         self.connection.commit()
 

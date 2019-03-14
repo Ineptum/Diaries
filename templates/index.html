@@ -1,27 +1,35 @@
 ﻿{% extends "base.html" %}
 
 {% block content %}
-    <h1>{{title}}</h1>
-    <div class="btn-group">
-        <a href="/add_news" class="btn btn-outline-primary btn-lg mb-4 rounded" role="button">Добавить новость</a>
-        {% if session['admin'] == 1 %}
-            <a href="/admin" class="btn btn-outline-primary btn-lg mb-4 ml-4 rounded" role="button">Статистика</a>
-        {% endif %}
-        <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle btn-lg ml-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировать</button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="/sort/0">По дате</a>
-                    <a class="dropdown-item" href="/sort/1">По алфавиту</a>
-            </div>
+<h1>{{title}}</h1>
+<div class="btn-group">
+    <a href="/add_news" class="btn btn-outline-primary btn-lg mb-4 rounded" role="button">Добавить новость</a>
+    {% if session['admin'] == 1 %}
+    <a href="/admin" class="btn btn-outline-primary btn-lg mb-4 ml-4 rounded" role="button">Статистика</a>
+    {% endif %}
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle btn-lg ml-4" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировать
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/sort/0">По дате</a>
+            <a class="dropdown-item" href="/sort/1">По алфавиту</a>
         </div>
     </div>
-    {% for new in news %}
-    <div class="jumbotron">
-        <p class="lead">{{ new['pub_date'] }}</p>
-        <h1 class="display-5">{{ new['title'] }}</h1>
-        <p class="lead">{{ new['content'] }}</p>
-        <a href="/delete_news/{{new['nid']}}" class="btn btn-outline-primary btn-sm mt-4" role="button">Удалить</a>
-	<a href="/edit_news/{{new['nid']}}" class="btn btn-outline-primary btn-sm mt-4" role="button">Редактировать</a>
-    </div>
-    {% endfor %}
+</div>
+{% for new in news %}
+<div class="jumbotron">
+    <p class="lead">{{ new['pub_date'] }}</p>
+    <h1 class="display-5">{{ new['title'] }}</h1>
+
+    {% if new["pic"] != '0' %}
+        <img src="{{ url_for('static', filename='img/{}'.format(new['pic'].filename.split("/")[-1])) }}" {{ 'width={} height={}'.format(1040 if new["pic"].size[0] > 1040 else new["pic"].size[0], 1040 / new["pic"].size[0] * new["pic"].size[1] if new["pic"].size[0] > 1040 else new["pic"].size[1]) }}>
+        <p></p>
+    {% endif %}
+
+    <p class="lead">{{ new['content'] }}</p>
+    <a href="/delete_news/{{new['nid']}}" class="btn btn-outline-primary btn-sm mt-4" role="button">Удалить</a>
+    <a href="/edit_news/{{new['nid']}}" class="btn btn-outline-primary btn-sm mt-4" role="button">Редактировать</a>
+</div>
+{% endfor %}
 {% endblock %}
