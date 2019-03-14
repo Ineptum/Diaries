@@ -1,12 +1,27 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
-{%block content %}
-    <a href="/add_news">Add news.</a>
-    {% for item in news %}
-        <div class="alert alert-dark" role="alert">
-            <h2>{{item[1]}}</h2>
-            <div>{{item[2]}}</div>
-            <a href="/delete_news/{{item[0]}}">Delete news</a>
+{% block content %}
+    <h1>{{title}}</h1>
+    <div class="btn-group">
+        <a href="/add_news" class="btn btn-outline-primary btn-lg mb-4 rounded" role="button">Добавить новость</a>
+        {% if session['admin'] == 1 %}
+            <a href="/admin" class="btn btn-outline-primary btn-lg mb-4 ml-4 rounded" role="button">Статистика</a>
+        {% endif %}
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle btn-lg ml-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Сортировать</button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/sort/0">По дате</a>
+                    <a class="dropdown-item" href="/sort/1">По алфавиту</a>
+            </div>
         </div>
+    </div>
+    {% for new in news %}
+    <div class="jumbotron">
+        <p class="lead">{{ new['pub_date'] }}</p>
+        <h1 class="display-5">{{ new['title'] }}</h1>
+        <p class="lead">{{ new['content'] }}</p>
+        <a href="/delete_news/{{new['nid']}}" class="btn btn-outline-primary btn-sm mt-4" role="button">Удалить</a>
+	<a href="/edit_news/{{new['nid']}}" class="btn btn-outline-primary btn-sm mt-4" role="button">Редактировать</a>
+    </div>
     {% endfor %}
 {% endblock %}
