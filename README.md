@@ -1,4 +1,5 @@
-# Diaries
+# Diaries Version 1.0.0 29/03/2019
+# E-mail: KatKollare@yandex.ru
 
 It is a simple application for the ones who want to have their personal diaries in a web format.
 Simply register an accont, provide it with news and pictures to them, gather your statistics and enjoy yourself to the fullest.
